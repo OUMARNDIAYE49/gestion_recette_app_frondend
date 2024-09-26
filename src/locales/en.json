@@ -1,0 +1,47 @@
+{
+  "navbar": {
+    "brand": "Recipe Management",
+    "home": "Home",
+    "recipesList": "Recipes List",
+    "addRecipe": "Add Recipe"
+  },
+  "home": {
+    "welcomeMessage": "Welcome to the Recipe Management Application",
+    "leadText": "Discover, add, and manage your favorite recipes.",
+    "navigateInstructions": "Use the menu to navigate between pages and start adding your recipes.",
+    "viewRecipesButton": "View Recipes"
+  },
+  "recettes": {
+    "listTitle": "List of Recipes",
+    "addRecipe": "Add New Recipe", 
+    "ajouterTitre": "Add a New Recipe",
+    "modifierTitre": "Edit Recipe",
+    "id": "ID",
+    "titleColumn": "Title",
+    "ingredients": "Ingredients",
+    "type": "Type",
+    "actions": "Actions",
+    "viewDetails": "View Details",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "entrée": "Starter",
+    "plat": "Main Course",
+    "dessert": "Dessert",
+    "retourListe": "Back to List",
+    "recetteNonTrouvee": "Recipe not found.",
+    "form": {
+      "modifierTitre": "Edit a Recipe",
+      "ajouterTitre": "Add a New Recipe",
+      "titreRecette": "Recipe Title",
+      "ingredients": "Ingredients",
+      "typeRecette": "Recipe Type",
+      "entrée": "Starter",
+      "plat": "Main Course",
+      "dessert": "Dessert",
+      "submitAdd": "Add Recipe",
+      "submitEdit": "Edit Recipe"
+    }
+  }
+}

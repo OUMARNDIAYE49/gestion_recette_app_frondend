@@ -1,0 +1,47 @@
+{
+  "navbar": {
+    "brand": "Gestion de Recettes",
+    "home": "Accueil",
+    "recipesList": "Liste des Recettes",
+    "addRecipe": "Ajouter Recette"
+  },
+  "home": {
+    "welcomeMessage": "Bienvenue sur l'Application de Gestion des Recettes",
+    "leadText": "Découvrez, ajoutez et gérez vos recettes de cuisine préférées.",
+    "navigateInstructions": "Utilisez le menu pour naviguer entre les pages et commencer à ajouter vos recettes.",
+    "viewRecipesButton": "Voir les Recettes"
+  },
+  "recettes": {
+    "title": "Liste des Recettes",
+    "addRecipeButton": "Ajouter une Recette",
+    "ajouterTitre": "Ajouter une Nouvelle Recette",
+    "modifierTitre": "Modifier la Recette",
+    "id": "ID",
+    "titleColumn": "Titre",
+    "ingredients": "Ingrédients",
+    "type": "Type",
+    "actions": "Actions",
+    "viewDetails": "Voir Détails",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "entrée": "Entrée",
+    "plat": "Plat",
+    "dessert": "Dessert",
+    "retourListe": "Retour à la liste",
+    "recetteNonTrouvee": "Recette non trouvée.",
+    "form": {
+      "modifierTitre": "Modifier une Recette",
+      "ajouterTitre": "Ajouter une Nouvelle Recette",
+      "titreRecette": "Titre de la Recette",
+      "ingredients": "Ingrédients",
+      "typeRecette": "Type de Recette",
+      "entrée": "Entrée",
+      "plat": "Plat",
+      "dessert": "Dessert",
+      "submitAdd": "Ajouter la Recette",
+      "submitEdit": "Modifier la Recette"
+    }
+  }
+}
