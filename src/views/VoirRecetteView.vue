@@ -1,19 +1,35 @@
 <template>
-  <div class="container mt-4">
-    <div v-if="recette" class="card mb-4">
-      <div class="card-header">
-        <h1 class="card-title">{{ recette.titre }}</h1>
+  <div class="container mt-5">
+    <div v-if="recette" class="card mb-5 shadow-lg">
+      <img
+        v-if="recette.image"
+        :src="recette.image"
+        alt="Image de la recette"
+        class="card-img-top"
+      />
+      <div class="card-header text-center bg-primary text-white">
+        <h1 class="card-title mb-0">{{ recette.titre }}</h1>
       </div>
       <div class="card-body">
-        <p><strong>{{ $t('recettes.ingredients') }}: </strong></p>
-        <p>{{ recette.ingredients }}</p>
-        <p><strong>{{ $t('recettes.type') }}: </strong> <span>{{ recette.type }}</span></p>
-      </div>
-      <div class="card-footer text-end">
-        <router-link to="/recettes" class="btn btn-primary">{{ $t('recettes.retourListe') }}</router-link>
+        <div class="d-flex justify-content-between mb-3">
+          <p><strong>{{ $t('recettes.type') }}: </strong> {{ recette.type }}</p>
+          <p><strong>{{ $t('recettes.category') }}: </strong> {{ recette.categorie }}</p>
+        </div>
+        <hr />
+        <h4 class="mb-3">{{ $t('recettes.ingredients') }}</h4>
+        <ul class="list-group list-group-flush mb-4">
+          <li v-for="(ingredient, index) in recette.ingredients.split(',')" :key="index" class="list-group-item">
+            {{ ingredient }}
+          </li>
+        </ul>
+        <div class="text-end">
+          <router-link to="/recettes" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left"></i> {{ $t('recettes.retourListe') }}
+          </router-link>
+        </div>
       </div>
     </div>
-    <div v-else class="alert alert-warning">
+    <div v-else class="alert alert-warning text-center mt-5">
       {{ $t('recettes.recetteNonTrouvee') }}
     </div>
   </div>
@@ -40,34 +56,34 @@ export default {
 
 <style scoped>
 .container {
-  max-width: 1000px;
+  max-width: 800px;
 }
 
 .card {
-  border-radius: 10px;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.card-img-top {
+  height: 250px;
+  object-fit: cover;
 }
 
 .card-header {
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #dee2e6;
-}
-
-.card-title {
-  margin: 0;
-  font-size: 1.5rem;
+  padding: 20px;
 }
 
 .card-body {
-  padding: 1.5rem;
+  padding: 30px;
 }
 
-.card-footer {
+.list-group-item {
+  font-size: 1.1rem;
   background-color: #f8f9fa;
-  border-top: 1px solid #dee2e6;
 }
 
-.alert {
-  margin-top: 20px;
-  font-size: 1.2rem;
+.btn {
+  font-size: 1rem;
+  padding: 10px 20px;
 }
 </style>

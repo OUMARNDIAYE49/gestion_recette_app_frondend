@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <!-- Barre de navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">{{ $t('navbar.brand') }}</a>
@@ -22,11 +23,13 @@
             <li class="nav-item">
               <router-link to="/recettes" class="nav-link">{{ $t('navbar.recipesList') }}</router-link>
             </li>
+            
             <li class="nav-item">
-              <router-link to="/ajouter" class="nav-link">{{ $t('navbar.addRecipe') }}</router-link>
+              <router-link to="/categories" class="nav-link">{{ $t('navbar.categoriesList') }}</router-link>
             </li>
+            
           </ul>
-    
+  
           <select v-model="locale" @change="changerLangue" class="form-select w-auto">
             <option value="fr">Français</option>
             <option value="en">English</option>
@@ -34,7 +37,11 @@
         </div>
       </div>
     </nav>
-    <router-view />
+
+    <!-- Vue principale -->
+    <div class="mt-4">
+      <router-view />
+    </div>
   </div>
 </template>
 
@@ -47,7 +54,7 @@ export default {
     const { locale } = useI18n();
 
     const changerLangue = (event) => {
-      locale.value = event.target.value; 
+      locale.value = event.target.value;
     };
 
     return { locale, changerLangue };
@@ -57,4 +64,12 @@ export default {
 
 <style>
 @import 'bootstrap/dist/css/bootstrap.min.css';
+
+.container {
+  max-width: 1200px;
+}
+
+.navbar {
+  margin-bottom: 20px;
+}
 </style>

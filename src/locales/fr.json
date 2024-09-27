@@ -1,47 +1,76 @@
 {
   "navbar": {
-    "brand": "Gestion de Recettes",
+    "brand": "Gestion des Recettes",
     "home": "Accueil",
     "recipesList": "Liste des Recettes",
-    "addRecipe": "Ajouter Recette"
+    "addRecipe": "Ajouter une Recette",
+    "categoriesList": "Liste des Catégories",
+    "addCategory": "Ajouter une Catégorie"
   },
   "home": {
-    "welcomeMessage": "Bienvenue sur l'Application de Gestion des Recettes",
-    "leadText": "Découvrez, ajoutez et gérez vos recettes de cuisine préférées.",
+    "welcomeMessage": "Bienvenue dans l'Application de Gestion des Recettes",
+    "leadText": "Découvrez, ajoutez et gérez vos recettes préférées.",
     "navigateInstructions": "Utilisez le menu pour naviguer entre les pages et commencer à ajouter vos recettes.",
     "viewRecipesButton": "Voir les Recettes"
   },
   "recettes": {
-    "title": "Liste des Recettes",
-    "addRecipeButton": "Ajouter une Recette",
+    "listTitle": "Liste des Recettes",
+    "addRecipe": "Ajouter une Nouvelle Recette",
+    "searchPlaceholder": "Rechercher...",
     "ajouterTitre": "Ajouter une Nouvelle Recette",
     "modifierTitre": "Modifier la Recette",
     "id": "ID",
     "titleColumn": "Titre",
     "ingredients": "Ingrédients",
     "type": "Type",
+    "category": "Catégorie",
     "actions": "Actions",
-    "viewDetails": "Voir Détails",
+    "viewDetails": "Voir les Détails",
     "edit": "Modifier",
     "delete": "Supprimer",
     "save": "Enregistrer",
     "cancel": "Annuler",
     "entrée": "Entrée",
-    "plat": "Plat",
+    "plat": "Plat Principal",
     "dessert": "Dessert",
-    "retourListe": "Retour à la liste",
+    "retourListe": "Retour à la Liste",
     "recetteNonTrouvee": "Recette non trouvée.",
     "form": {
-      "modifierTitre": "Modifier une Recette",
       "ajouterTitre": "Ajouter une Nouvelle Recette",
+      "modifierTitre": "Modifier la Recette",
       "titreRecette": "Titre de la Recette",
       "ingredients": "Ingrédients",
       "typeRecette": "Type de Recette",
       "entrée": "Entrée",
-      "plat": "Plat",
+      "plat": "Plat Principal",
       "dessert": "Dessert",
+      "categorie": "Catégorie",
+      "salades": "Salades",
+      "pates": "Pâtes",
+      "gateaux": "Gâteaux",
+      "quiches": "Quiches",
+      "végétarien": "Végétarien",
+      "vegan": "Vegan",
+      "sansGluten": "Sans Gluten",
+      "classique": "Classique",
       "submitAdd": "Ajouter la Recette",
-      "submitEdit": "Modifier la Recette"
+      "submitEdit": "Modifier la Recette",
+      "annuler": "Annuler"
+    },
+    "errors": {
+      "emptyCategory": "Veuillez remplir la catégorie avant d'ajouter.",
+      "deleteConfirmation": "Êtes-vous sûr de vouloir supprimer cet élément ?"
     }
+  },
+  "categoryList": {
+    "title": "Liste des Catégories",
+    "addCategory": "Nouvelle catégorie",
+    "searchCategory": "Rechercher catégorie",
+    "error": "Veuillez remplir le nom de la catégorie.",
+    "edit": "Modifier",
+    "save": "Sauvegarder",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer la catégorie \"{name}\" ?"
   }
 }
