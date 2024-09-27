@@ -45,8 +45,6 @@ export default {
     const recettesStore = useRecettesStore();
     const route = useRoute();
     const recetteId = parseInt(route.params.id);
-
-    // Trouver la recette en fonction de l'ID
     const recette = computed(() => recettesStore.getRecetteById(recetteId));
 
     return { recette };

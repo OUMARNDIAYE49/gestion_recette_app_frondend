@@ -1,59 +1,55 @@
 import { defineStore } from 'pinia';
+import axios from "axios";
+import { ref } from 'vue';
 
 export const useRecettesStore = defineStore('recettes', {
   state: () => ({
-    recettes: [
-      // Exemples de recettes avec des IDs uniques
-      {
-        "id": 1,
-        "titre": "Salade César",
-        "ingredients": "Laitue, Croutons, Poulet, Sauce César",
-        "type": "Entrée",
-        "categorie": "Salades"
-      },
-      {
-        "id": 2,
-        "titre": "Spaghetti Bolognese",
-        "ingredients": "Spaghetti, Viande hachée, Sauce tomate",
-        "type": "Plat Principal",
-        "categorie": "Pâtes"
-      },
-      {
-        "id": 3,
-        "titre": "Tiramisu",
-        "ingredients": "Mascarpone, Biscuits à la cuillère, Café, Cacao",
-        "type": "Dessert",
-        "categorie": "Gâteaux"
-      },
-      {
-        "id": 4,
-        "titre": "Quiche Lorraine",
-        "ingredients": "Pâte brisée, Lardons, Crème, Oeufs",
-        "type": "Plat Principal",
-        "categorie": "Quiches"
-      },
-    ],
-    nextId: 5 // Prochain ID unique à utiliser
+    recettes: [],
+    nextId: 5 
   }),
 
   actions: {
-    ajouterRecette(recette) {
-      recette.id = this.nextId; // Assigner l'ID unique à la recette
-      this.recettes.push(recette);
-      this.nextId++; // Incrémenter l'ID pour la prochaine recette
+ 
+    async loadDataFromApi() {
+      try {
+        const resp = await axios.get("http://localhost:4000/api/recipes");
+        this.recettes = resp.data;
+      } catch (error) {
+        this.recettes = [];
+      }
+   
+    },
+
+    async addRecette(recette) {
+      try {
+        const resp = await axios.post("http://localhost:4000/api/recipes", recette);
+        this.recettes.push(resp.data);                
+        await this.loadDataFromApi();  
+      } catch (error) {
+        console.error("Error adding recipe:", error);              
+      }
     },
     
-    modifierRecette(id, nouvelleRecette) {
-      const index = this.recettes.findIndex(recette => recette.id === id);
-      if (index !== -1) {
-        this.recettes[index] = { ...nouvelleRecette, id }; // Préserver l'ID original
+    async updateRecipe(id, updatedRecipe) {
+      try {
+        await axios.put(`http://localhost:4000/api/recipes/${id}`, updatedRecipe);
+        await this.loadDataFromApi(); 
+      } catch (error) {
+        console.error("Error updating recipe:", error);
+      }
+    },
+    
+    
+    async deleteRecipe(id) {
+      try {
+        await axios.delete(`http://localhost:4000/api/recipes/${id}`);
+        await this.loadRecipesFromApi();
+      } catch (error) {
+        console.error("Error deleting recipe:", error);
       }
     },
 
-    supprimerRecette(id) {
-      this.recettes = this.recettes.filter(recette => recette.id !== id);
-    },
-
+    
     getRecetteById(id) {
       return this.recettes.find(recette => recette.id === id);
     }

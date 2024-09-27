@@ -11,7 +11,11 @@ const routes = [
   { path: '/recettes', name: 'ListeRecettes', component: ListeRecettesView },
   { path: '/ajouter', name: 'AjouterRecette', component: AjouterRecetteView },
   { path: '/modifier/:recetteId', name: 'ModifierRecette', component: ModifierRecetteView, props: true },
-  { path: '/voir/:id', name: 'VoirRecette', component: VoirRecetteView, props: true } ,
+  {
+    path: '/recettes/:id',
+    name: 'VoirRecette',
+    component: VoirRecetteView
+  },
   { path: '/categories', name: 'CategoryList', component: CategoryList },
 ];
 

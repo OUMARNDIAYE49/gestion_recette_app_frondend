@@ -1,9 +1,7 @@
 <template>
   <div class="container my-5">
-    <!-- Titre de la liste des recettes -->
-    <h2 class="my-4 text-center">{{ $t('recettes.listTitle') }}</h2>
+    <h2 class="my-4 text-center ">Liste des Recettes</h2>
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <!-- Ajout de la barre de recherche -->
       <div class="d-flex align-items-center">
         <input
           type="text"
@@ -12,47 +10,51 @@
           v-model="searchTerm"
         />
       </div>
-      <router-link to="/ajouter" class="btn btn-primary">{{ $t('recettes.addRecipe') }}</router-link>
+     
+      <button class="btn btn-primary" @click="goToAddRecipePage">
+        <i class="fas fa-plus"></i> Ajouter une recette
+      </button>
     </div>
-    <table class="table table-hover table-bordered shadow-sm">
+
+    <div v-if="store.recettes.length === 0" class="text-center">
+      <p>Aucune recette trouvée.</p>
+    </div>
+
+    <table v-else class="table table-hover table-bordered shadow-sm">
       <thead class="table-dark">
         <tr>
-          <th>{{ $t('recettes.id') }}</th>
-          <th>{{ $t('recettes.titleColumn') }}</th>
-          <th>{{ $t('recettes.ingredients') }}</th>
-          <th>{{ $t('recettes.type') }}</th>
-          <th>{{ $t('recettes.category') }}</th>
-          <th>{{ $t('recettes.actions') }}</th>
+          <th>#</th>
+          <th>Titre</th>
+          <th>Ingrédients</th>
+          <th>Type</th>
+          <th>Catégorie</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        
         <tr
-          v-for="recette in filteredRecettes"
+          v-for="(recette, index) in store.recettes"
           :key="recette.id"
           class="recipe-row"
         >
-          <td>{{ recette.id }}</td>
-          <td class="recipe-title">{{ recette.titre }}</td>
+          <td>{{ index + 1 }}</td>
+          <td class="recipe-titre">{{ recette.titre }}</td>
           <td>{{ recette.ingredients }}</td>
           <td>{{ recette.type }}</td>
-          <td>{{ recette.categorie }}</td> 
+          <td>{{ recette.category }}</td>
           <td>
             <router-link
               :to="{ name: 'VoirRecette', params: { id: recette.id } }"
               class="btn btn-info btn-sm me-3"
-              >{{ $t('recettes.viewDetails') }}</router-link
-            >
+            >Voir Détails</router-link>
             <router-link
               :to="{ name: 'ModifierRecette', params: { recetteId: recette.id } }"
               class="btn btn-warning btn-sm me-3"
-              >{{ $t('recettes.edit') }}</router-link
-            >
+            >Modifier</router-link>
             <button
               @click="supprimer(recette.id)"
               class="btn btn-danger btn-sm"
-              >{{ $t('recettes.delete') }}</button
-            >
+            >Supprimer</button>
           </td>
         </tr>
       </tbody>
@@ -60,40 +62,29 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from 'vue';
 import { useRecettesStore } from '@/stores/useRecettesStore';
-import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-export default {
-  setup() {
-    const recettesStore = useRecettesStore();
-    const searchTerm = ref('');
+const store = useRecettesStore();
+const router = useRouter();
+const searchTerm = ref('');
 
-    // Calculer les recettes filtrées
-    const filteredRecettes = computed(() => {
-      if (!searchTerm.value) {
-        return recettesStore.recettes;
-      }
-      const lowerCaseTerm = searchTerm.value.toLowerCase();
-      return recettesStore.recettes.filter((recette) =>
-        recette.titre.toLowerCase().includes(lowerCaseTerm) ||
-        recette.ingredients.toLowerCase().includes(lowerCaseTerm) ||
-        recette.type.toLowerCase().includes(lowerCaseTerm) ||
-        recette.categorie.toLowerCase().includes(lowerCaseTerm) 
-      );
-    });
+onMounted(() => {
+  store.loadDataFromApi();
+});
 
-    const supprimer = (id) => {
-      recettesStore.supprimerRecette(id);
-    };
+const goToAddRecipePage = () => {
+  router.push({ name: 'AjouterRecette' });
+};
 
-    return { recettesStore, supprimer, searchTerm, filteredRecettes };
-  }
+const supprimer = (id) => {
+  store.supprimerRecette(id);
 };
 </script>
 
 <style scoped>
-/* Style global du conteneur */
 .container {
   max-width: 1100px;
   margin: auto;
@@ -102,20 +93,16 @@ export default {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
-/* Style du titre */
 h2 {
   font-size: 1.75rem;
   font-weight: 600;
   color: #343a40;
 }
 
-/* Style de la barre de recherche */
 .search-input {
   width: 300px;
 }
 
-/* Table hover et bordure */
 .table {
   margin-top: 20px;
   background-color: #ffffff;
@@ -125,8 +112,6 @@ h2 {
 .table-hover tbody tr:hover {
   background-color: #f1f1f1;
 }
-
-/* Style de la ligne de recette */
 .recipe-row {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -136,13 +121,11 @@ h2 {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Style du titre de la recette */
 .recipe-title {
   font-weight: 600;
   color: #495057;
 }
 
-/* Boutons d'action */
 .btn-sm {
   font-size: 0.875rem;
 }
