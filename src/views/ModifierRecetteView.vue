@@ -22,7 +22,7 @@
             required
           >
             <option value="Entrée">{{ $t('recettes.entrée') }}</option>
-            <option value="Plat Principal">{{ $t('recettes.plat') }}</option>
+            <option value="Plat">{{ $t('recettes.plat') }}</option>
             <option value="Dessert">{{ $t('recettes.dessert') }}</option>
           </select>
         </div>
@@ -33,13 +33,13 @@
           <select
             id="categorie"
             class="form-select"
-            v-model="recette.categorie"
+            v-model="recette.categorie_id"
             required
           >
-            <option value="Salades">{{ $t('recettes.form.salades') }}</option>
-            <option value="Pâtes">{{ $t('recettes.form.pates') }}</option>
-            <option value="Gâteaux">{{ $t('recettes.form.gateaux') }}</option>
-            <option value="Quiches">{{ $t('recettes.form.quiches') }}</option>
+            <option value="" disabled selected>Sélectionner une catégorie</option>
+            <option v-for="categorie in categories" :key="categorie.id" :value="categorie.id">
+              {{ categorie.nom }}
+            </option>
           </select>
         </div>
       </div>
@@ -54,41 +54,78 @@
         ></textarea>
       </div>
       <div class="d-flex justify-content-between align-items-center">
-        <button type="submit" class="btn btn-primary">{{ $t('recettes.save') }}</button>
-        <router-link to="/recettes" class="btn btn-danger ms-2">{{ $t('recettes.cancel') }}</router-link>
+        <button type="submit" class="btn btn-primary" :disabled="!recette.titre || !recette.ingredients">{{ $t('recettes.save') }}</button>
+        <router-link to="/recettes" class="btn btn-secondary ms-5">{{ $t('recettes.cancel') }}</router-link>
       </div>
     </form>
   </div>
 </template>
 
 <script>
-import { useRecettesStore } from '@/stores/useRecettesStore';
-import { computed, onMounted } from 'vue';
+import { reactive, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useRecettesStore } from '@/stores/useRecettesStore';
+import { useCategoriesStore } from '@/stores/useCategoriesStore';
 
 export default {
   setup() {
     const recettesStore = useRecettesStore();
+    const categoriesStore = useCategoriesStore();
     const route = useRoute();
     const router = useRouter();
     const recetteId = parseInt(route.params.recetteId);
 
-    // Trouver la recette en fonction de l'ID
-    const recette = computed(() => recettesStore.getRecetteById(recetteId));
+    const recette = reactive({
+      titre: '',
+      type: '',
+      categorie_id: null,
+      ingredients: ''
+    });
 
-    onMounted(() => {
-      if (!recette.value) {
-        router.push('/recettes');
+    onMounted(async () => {
+      await categoriesStore.loadDataFromApi();
+
+      const savedRecette = localStorage.getItem(`recette_${recetteId}`);
+      if (savedRecette) {
+        Object.assign(recette, JSON.parse(savedRecette));
+      } else {
+        const recetteExistante = recettesStore.getRecetteById(recetteId);
+        if (recetteExistante) {
+          Object.assign(recette, recetteExistante);
+        }
+      }
+
+      const selectedCategory = localStorage.getItem(`selected_category_${recetteId}`);
+      if (selectedCategory) {
+        recette.categorie_id = selectedCategory;
       }
     });
 
-    const mettreAJourRecette = () => {
-      recettesStore.modifierRecette(recetteId, { ...recette.value });
-      router.push('/recettes');
+    const mettreAJourRecette = async () => {
+      if (!recette.titre || !recette.ingredients) {
+        alert('Veuillez remplir tous les champs obligatoires.');
+        return;
+      }
+
+      try {
+        await recettesStore.updateRecipe(recetteId, { ...recette });
+        console.log('Recette mise à jour avec succès');
+
+        localStorage.setItem(`recette_${recetteId}`, JSON.stringify(recette));
+        localStorage.setItem(`selected_category_${recetteId}`, recette.categorie_id);
+
+        router.push({ name: 'ListeRecettes' });
+      } catch (error) {
+        console.error('Erreur lors de la mise à jour de la recette:', error);
+        alert('Erreur lors de la mise à jour de la recette, veuillez réessayer.');
+      }
     };
+
+    const categories = categoriesStore.categories;
 
     return {
       recette,
+      categories,
       mettreAJourRecette
     };
   }
@@ -98,7 +135,8 @@ export default {
 <style scoped>
 .container {
   max-width: 1000px;
-  margin: 0 auto; /* Centrer le conteneur */
+  margin: 0 auto; 
+  padding: 20px;
 }
 form {
   margin-top: 20px;

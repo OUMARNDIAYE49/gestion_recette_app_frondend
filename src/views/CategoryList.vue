@@ -1,232 +1,155 @@
 <template>
   <div class="container my-5">
-    <h2 class="my-4 text-center">{{ $t('categoryList.title') }}</h2>
-
-    <div class="d-flex justify-content-between mb-3">
-      <div class="d-flex flex-column">
-        <div class="d-flex">
-          <input 
-            type="text" 
-            class="form-control me-2" 
-            v-bind:placeholder="$t('categoryList.addCategory')" 
-            v-model="newCategoryName"
-            @keyup.enter="addCategory"
-            :class="{ 'is-invalid': newCategoryError }"
-          />
-          <button class="btn btn-primary" @click="addCategory">{{ $t('categoryList.addCategory') }}</button>
-        </div>
-        <div v-if="newCategoryError" class="text-danger mt-1">
-          {{ $t('categoryList.error') }}
-        </div>
+    <h2 class="my-4 text-center">{{ $t("categoryList.title") }}</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div class="d-flex align-items-center">
+        <input
+          type="text"
+          class="form-control me-3 search-input"
+          :placeholder="$t('categoryList.searchCategory')"
+          v-model="searchTerm"
+        />
       </div>
+      <button class="btn btn-primary" @click="goToAddCategoryPage">
+  <i class="fas fa-plus"></i> {{ $t("categorie.ajouterTitre") }}
+</button>
 
-      <input 
-        type="text" 
-        class="form-control search-bar ms-3" 
-        v-bind:placeholder="$t('categoryList.searchCategory')" 
-        v-model="searchQuery"
-      />
     </div>
 
-    <ul class="list-group">
-      <li
-        v-for="category in filteredCategories"
-        :key="category.id"
-        class="list-group-item d-flex justify-content-between align-items-center shadow-sm mb-3"
-      >
-        <span v-if="!isEditing(category.id)" class="category-name">
-          {{ category.name }}
-        </span>
-        <input 
-          v-else 
-          type="text" 
-          class="form-control edit-input" 
-          v-model="editCategoryName" 
-          @keyup.enter="saveCategory(category.id)"
-        />
+    <div v-if="filteredCategories.length === 0" class="text-center">
+      <p>{{ $t("categoryList.error") }}</p>
+    </div>
 
-        <div>
-          <button 
-            v-if="!isEditing(category.id)" 
-            class="btn btn-warning action-btn me-2" 
-            @click="editCategory(category.id, category.name)"
-          >
-            {{ $t('categoryList.edit') }}
-          </button>
-          <div v-else>
-            <button 
-              class="btn btn-success action-btn me-2" 
-              @click="saveCategory(category.id)"
-            >
-              {{ $t('categoryList.save') }}
-            </button>
-            <button 
-              class="btn btn-secondary action-btn me-2" 
-              @click="cancelEdit"
-            >
-              {{ $t('categoryList.cancel') }}
-            </button>
-          </div>
-          <button 
-            v-if="!isEditing(category.id)" 
-            class="btn btn-danger action-btn" 
-            @click="confirmDelete(category.id)"
-          >
-            {{ $t('categoryList.delete') }}
-          </button>
-        </div>
-      </li>
-    </ul>
+    <table v-else class="table table-hover table-bordered shadow-sm">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>{{ $t("categorie.nomCategorie") }}</th>
+          <th>{{ $t("categoryList.actions") }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="(categorie, index) in filteredCategories"
+          :key="categorie.id"
+          class="categorie-row"
+        >
+          <td>{{ index + 1 }}</td>
+          <td class="category-title">{{ categorie.nom }}</td>
+          <td>
+            <router-link
+              :to="{ name: 'VoirCategorie', params: { id: categorie.id } }"
+              class="btn btn-info btn-sm me-3"
+            >{{ $t("categoryList.viewDetails") }}</router-link>
+            
+            <router-link
+              :to="{ name: 'ModifierCategorie', params: { categorieId: categorie.id } }"
+              class="btn btn-warning btn-sm me-3"
+            >{{ $t("categoryList.edit") }}</router-link>
+            <button
+              @click="deleteCategorie(categorie.id)"
+              class="btn btn-danger btn-sm"
+            >{{ $t("categoryList.delete") }}</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'CategoryList',
-  data() {
-    return {
-      categories: [
-        { id: 1, name: 'Salades' },
-        { id: 2, name: 'Pâtes' },
-        { id: 3, name: 'Gâteaux' },
-        { id: 4, name: 'Quiches' }
-      ],
-      nextId: 5,
-      newCategoryName: '',
-      searchQuery: '',
-      editingId: null,
-      editCategoryName: '',
-      newCategoryError: false
-    };
-  },
-  computed: {
-    filteredCategories() {
-      return this.categories.filter(category =>
-        category.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    }
-  },
-  methods: {
-    addCategory() {
-      if (this.newCategoryName.trim()) {
-        this.categories.push({ id: this.nextId++, name: this.newCategoryName });
-        console.log(`Nouvelle catégorie ajoutée : ${this.newCategoryName}`);
-        this.newCategoryName = '';
-        this.newCategoryError = false;
+
+<script setup>
+import { ref, onMounted, computed } from 'vue';
+import { useCategoriesStore } from '@/stores/useCategoriesStore';
+import { useRouter } from 'vue-router';
+
+const store = useCategoriesStore();
+const router = useRouter();
+const searchTerm = ref('');
+onMounted(() => {
+  store.loadDataFromApi();
+});
+
+const goToAddCategoryPage = () => {
+  router.push({ name: 'AjouterCategorie' });
+};
+
+const deleteCategorie = async (id) => {
+  if (confirm("Êtes-vous sûr de vouloir supprimer cette catégorie ?")) {
+    try {
+      await store.deleteCategorie(id);
+      alert('La catégorie a été supprimée avec succès.');
+    } catch (error) {
+      console.error('Erreur lors de la suppression de la catégorie :', error);
+      
+     
+      if (error.response && error.response.data.message === 'Category linked to recipe') {
+        alert('Erreur : Cette catégorie est rattachée à une ou plusieurs recettes et ne peut pas être supprimée.');
       } else {
-        this.newCategoryError = true;
+        alert('Erreur lors de la suppression de la catégorie. Veuillez réessayer.');
       }
-    },
-    editCategory(categoryId, categoryName) {
-      this.editingId = categoryId;
-      this.editCategoryName = categoryName;
-    },
-    saveCategory(categoryId) {
-      if (this.editCategoryName.trim()) {
-        const category = this.categories.find(c => c.id === categoryId);
-        category.name = this.editCategoryName;
-        console.log(`Catégorie mise à jour : ${this.editCategoryName}`);
-        this.editingId = null;
-        this.editCategoryName = '';
-      } else {
-        alert(this.$t('categoryList.error'));
-      }
-    },
-    cancelEdit() {
-      this.editingId = null;
-      this.editCategoryName = '';
-    },
-    confirmDelete(categoryId) {
-      const categoryName = this.categories.find(c => c.id === categoryId).name;
-      const confirmDeletion = confirm(this.$t('categoryList.deleteConfirm', { name: categoryName }));
-      if (confirmDeletion) {
-        this.deleteCategory(categoryId);
-      }
-    },
-    deleteCategory(categoryId) {
-      this.categories = this.categories.filter(category => category.id !== categoryId);
-      console.log(`Catégorie supprimée avec ID : ${categoryId}`);
-    },
-    isEditing(categoryId) {
-      return this.editingId === categoryId;
     }
   }
 };
+
+const filteredCategories = computed(() => {
+  if (!searchTerm.value) return store.categories; 
+  return store.categories.filter(categorie => 
+    categorie.nom.toLowerCase().includes(searchTerm.value.toLowerCase()) 
+  );
+});
 </script>
 
 <style scoped>
 .container {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: auto;
   padding: 20px;
   background-color: #f8f9fa;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
 h2 {
   font-size: 1.75rem;
   font-weight: 600;
   color: #343a40;
 }
 
-.btn-primary {
-  font-size: 1rem;
-  padding: 0.5em 1em;
-  font-weight: 600;
+.search-input {
+  width: 300px;
 }
 
-.btn-warning {
-  font-size: 1rem;
-  padding: 0.5em 1em;
-  font-weight: 600;
-}
-
-.list-group-item {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border: none;
+.table {
+  margin-top: 20px;
   background-color: #ffffff;
   border-radius: 6px;
+  width: 700px;
 }
 
-.list-group-item:hover {
+.table-hover tbody tr:hover {
+  background-color: #f1f1f1;
+}
+.category-row {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.category-row:hover {
   transform: translateY(-5px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
-.category-name {
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: #495057;
-}
-
-.action-btn {
-  font-size: 1rem;
-  padding: 0.5em 1em;
+.category-title {
   font-weight: 600;
-}
-.btn-primary {
-  width: 260px;
-  height: 45px; 
-  padding: 0.5em 1em; 
-}
-.search-bar {
-  width: 250px;
-  height: 45px;
-}
-
-.edit-input {
-  width: 60%;
-  font-size: 1.25rem;
-  font-weight: 500;
   color: #495057;
 }
 
-.is-invalid {
-  border-color: #dc3545;
+.btn-sm {
+  font-size: 0.875rem;
 }
 
-.text-danger {
-  font-size: 0.875rem;
+.btn-info,
+.btn-warning,
+.btn-danger {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 </style>

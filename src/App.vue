@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <!-- Barre de navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">{{ $t('navbar.brand') }}</a>
@@ -18,18 +17,37 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav me-auto">
             <li class="nav-item">
-              <router-link to="/" class="nav-link">{{ $t('navbar.home') }}</router-link>
+              <RouterLink
+                class="nav-link"
+                :class="{ active: isActive('home') }"
+                to="/"
+                @click="setActive('home')"
+              >
+                {{ $t('navbar.home') }}
+              </RouterLink>
             </li>
             <li class="nav-item">
-              <router-link to="/recettes" class="nav-link">{{ $t('navbar.recipesList') }}</router-link>
+              <RouterLink
+                class="nav-link"
+                :class="{ active: isActive('recettes') }"
+                to="/recettes"
+                @click="setActive('recettes')"
+              >
+                {{ $t('navbar.recipesList') }}
+              </RouterLink>
             </li>
-            
             <li class="nav-item">
-              <router-link to="/categories" class="nav-link">{{ $t('navbar.categoriesList') }}</router-link>
+              <RouterLink
+                class="nav-link"
+                :class="{ active: isActive('categories') }"
+                to="/categories"
+                @click="setActive('categories')"
+              >
+                {{ $t('navbar.categoriesList') }}
+              </RouterLink>
             </li>
-            
           </ul>
-  
+
           <select v-model="locale" @change="changerLangue" class="form-select w-auto">
             <option value="fr">Français</option>
             <option value="en">English</option>
@@ -37,39 +55,39 @@
         </div>
       </div>
     </nav>
-
-    <!-- Vue principale -->
     <div class="mt-4">
-      <router-view />
+      <RouterView />
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-export default {
-  name: 'App',
-  setup() {
-    const { locale } = useI18n();
+const { locale } = useI18n();
+const changerLangue = (event) => {
+  locale.value = event.target.value;
+};
 
-    const changerLangue = (event) => {
-      locale.value = event.target.value;
-    };
+const activeRoute = ref('home'); 
 
-    return { locale, changerLangue };
-  }
+const setActive = (route) => {
+  activeRoute.value = route;
+};
+
+const isActive = (route) => {
+  return activeRoute.value === route;
 };
 </script>
 
-<style>
-@import 'bootstrap/dist/css/bootstrap.min.css';
-
-.container {
-  max-width: 1200px;
+<style scoped>
+.navbar-nav .nav-link.active {
+  color: blue;
+  font-weight: bold;
 }
-
-.navbar {
-  margin-bottom: 20px;
+.navbar-nav .nav-link {
+  margin-right: 15px;
+  color: black; 
 }
 </style>

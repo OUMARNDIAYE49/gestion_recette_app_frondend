@@ -35,10 +35,10 @@ Avant de commencer, assurez-vous d'avoir les éléments suivants :
 
 1. Clonez le dépôt :
 
-   ````git clone https://github.com/OUMARNDIAYE49/gestion_recette_app.git````
+   ````git clone https://github.com/OUMARNDIAYE49/gestion_recette_app_frondend.git````
 
 2. Accédez au répertoire du projet :
-````cd gestion_recette_app````
+````cd gestion_recette_app_frondend````
 
 Installez les dépendances :
 
@@ -61,5 +61,5 @@ Pousser l'image sur Docker Hub : ````docker push Oumar Djiby Ndiaye/recette_app`
 
 
 ## Authers
-[Oumar Djiby Ndiaye](https://github.com/OUMARNDIAYE49/gestion_recette_app.git)
+[Oumar Djiby Ndiaye](https://github.com/OUMARNDIAYE49/gestion_recette_app_frondend.git)
   

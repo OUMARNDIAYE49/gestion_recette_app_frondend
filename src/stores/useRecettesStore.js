@@ -32,23 +32,30 @@ export const useRecettesStore = defineStore('recettes', {
     
     async updateRecipe(id, updatedRecipe) {
       try {
-        await axios.put(`http://localhost:4000/api/recipes/${id}`, updatedRecipe);
-        await this.loadDataFromApi(); 
+        await axios.put(`http://localhost:4000/api/recipe/${id}`, updatedRecipe);
+        
+        
+        const index = this.recettes.findIndex(recette => recette.id === id);
+        if (index !== -1) {
+          this.recettes[index] = { ...this.recettes[index], ...updatedRecipe }; 
+        }
+        
+        console.log("Recette mise à jour avec succès");
       } catch (error) {
         console.error("Error updating recipe:", error);
       }
     },
     
     
-    async deleteRecipe(id) {
+    async supprimerRecette(id) {
       try {
-        await axios.delete(`http://localhost:4000/api/recipes/${id}`);
-        await this.loadRecipesFromApi();
+        await axios.delete(`http://localhost:4000/api/recipe/${id}`);
+        this.recettes = this.recettes.filter((recette) => recette.id !== id); 
       } catch (error) {
-        console.error("Error deleting recipe:", error);
+        console.error('Erreur lors de la suppression de la recette :', error);
+        throw error;
       }
     },
-
     
     getRecetteById(id) {
       return this.recettes.find(recette => recette.id === id);

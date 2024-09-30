@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h2>{{ isEditMode ? $t('recettes.form.modifierTitre') : $t('recettes.form.ajouterTitre') }}</h2>
+    <h2>{{ isEditMode ? $t('recettes.form.modifierTitre') : $t('recettes.ajouterTitre') }}</h2>
     <form @submit.prevent="handleSubmit">
       <div class="mb-3">
         <label for="titre" class="form-label">{{ $t('recettes.form.titreRecette') }}</label>
@@ -33,19 +33,19 @@
         </div>
         <div class="w-50">
           <label for="categorie" class="form-label">{{ $t('recettes.form.categorie') }}</label>
-          <select id="categorie" v-model="recette.categorie" class="form-select" required>
-            <option value="Végétarien">{{ $t('recettes.form.végétarien') }}</option>
-            <option value="Vegan">{{ $t('recettes.form.vegan') }}</option>
-            <option value="Sans Gluten">{{ $t('recettes.form.sansGluten') }}</option>
-            <option value="Classique">{{ $t('recettes.form.classique') }}</option>
+          <select id="categorie" v-model="recette.categorie_id" class="form-select" required>
+            <option value="" disabled selected>Sélectionner une catégorie</option>
+            <option v-for="categorie in categories" :key="categorie.id" :value="categorie.id">
+              {{ categorie.nom }}
+            </option>
           </select>
         </div>
       </div>
-      <div class="d-flex justify-content-between mt-4">
-        <button type="submit" class="btn btn-primary btn-sm">
+      <div class="d-flex justify-content-between mt-5">
+        <button type="submit" class="btn btn-primary ">
           {{ isEditMode ? $t('recettes.form.submitEdit') : $t('recettes.form.submitAdd') }}
         </button>
-        <button type="button" class="btn btn-danger btn-sm" @click="handleCancel">
+        <button type="button" class="btn btn-secondary " @click="handleCancel">
           {{ $t('recettes.form.annuler') }}
         </button>
       </div>
@@ -56,9 +56,11 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRecettesStore } from "@/stores/useRecettesStore"; 
+import { useCategoriesStore } from "@/stores/useCategoriesStore"; 
 import { useRouter, useRoute } from "vue-router";
 
 const store = useRecettesStore();
+const categoriesStore = useCategoriesStore(); 
 const router = useRouter();
 const route = useRoute();
 
@@ -67,10 +69,13 @@ const recette = ref({
   titre: "",
   ingredients: "",
   type: "",
-  categorie: ""
+  categorie_id: null
 });
 
-onMounted(() => {
+onMounted(async () => {
+
+  await categoriesStore.loadDataFromApi();
+
   const recetteId = route.params.id; 
   if (recetteId) {
     isEditMode.value = true;
@@ -80,6 +85,8 @@ onMounted(() => {
     }
   }
 });
+
+const categories = categoriesStore.categories;
 
 const handleSubmit = async () => {
   try {

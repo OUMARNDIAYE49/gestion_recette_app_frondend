@@ -1,4 +1,17 @@
 {
+  "categorie": {
+    "ajouterTitre": "Add New Category",
+    "nomCategorie": "Category Name",
+    "ajouter": "Add",
+    "retourListe": "Return to List",
+    "erreurAjout": "An error occurred while adding the category.",
+    "detailsTitre": "Category Details",
+    "nom": "Category Name:",
+    "nonTrouvee": "Category not found.",
+    "modifierTitre": "Edit Category",
+    "enregistrerModifications": "Save Changes",
+    "annuler": "Cancel"
+  },
   "navbar": {
     "brand": "Recipe Management",
     "home": "Home",
@@ -28,7 +41,7 @@
     "viewDetails": "View Details",
     "edit": "Edit",
     "delete": "Delete",
-    "save": "Save",
+    "save": "Save Changes",
     "cancel": "Cancel",
     "entrée": "Starter",
     "plat": "Main Course",
@@ -36,8 +49,6 @@
     "retourListe": "Back to List",
     "recetteNonTrouvee": "Recipe not found.",
     "form": {
-      "ajouterTitre": "Add a New Recipe",
-      "modifierTitre": "Edit the Recipe",
       "titreRecette": "Recipe Title",
       "ingredients": "Ingredients",
       "typeRecette": "Recipe Type",
@@ -63,14 +74,29 @@
     }
   },
   "categoryList": {
-    "title": "Category List",
-    "addCategory": "New Category",
+    "title": "List of Categories",
+    "addCategory": "Add a Category",
     "searchCategory": "Search Category",
     "error": "Please fill in the category name.",
+    "actions": "Actions",
+    "viewDetails": "View Details",
     "edit": "Edit",
-    "save": "Save",
-    "cancel": "Cancel",
     "delete": "Delete",
     "deleteConfirm": "Are you sure you want to delete the category \"{name}\"?"
+  },
+  "recipeList": {
+    "title": "List of Recipes ",
+    "searchPlaceholder": "Search Recipe...",
+    "addRecipe": "Add New Recipe",
+    "noRecipesFound": "No recipes found.",
+    "id": "#",
+    "recipeTitle": "Title",
+    "ingredients": "Ingredients",
+    "type": "Type",
+    "category": "Category",
+    "actions": "Actions",
+    "viewDetails": "View Details",
+    "edit": "Edit",
+    "delete": "Delete"
   }
 }
